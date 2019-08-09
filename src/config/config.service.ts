@@ -2,23 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { ExchangeConfig } from '../model/exchange-config';
 import * as fs from 'fs';
 import { Configuration } from '../model/configuration';
-import { AppLogger } from '../core/AppLogger';
+import { Logger } from '@nestjs/common';
 
-export const CONFIG_FILE = './config.json';
+export const CONFIG_FILE = '/tmp/config.json';
 
 @Injectable()
 export class ConfigService {
   config: Configuration;
 
-  constructor(private log: AppLogger) {}
+  constructor() {}
 
   getExchanges(): ExchangeConfig[] {
+    Logger.debug('Configuration loading from:' + CONFIG_FILE);
     if (!this.config) {
-      const fileContents = fs.readFileSync(CONFIG_FILE, 'utf8');
       try {
-        const data = JSON.parse(fileContents);
-      } catch(err) {
-        this.log.error(err);
+        const fileContents = fs.readFileSync(CONFIG_FILE, 'utf8');
+        if (fileContents) {
+          this.config = JSON.parse(fileContents);
+        }
+      } catch (err) {
+        Logger.error('ERROR !!!!!!!!!!!!!:' + err);
       }
       return this.config.exchanges;
     }

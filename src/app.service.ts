@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import * as ccxt from 'ccxt';
+import { ConfigService } from './config/config.service';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    const exchanges: string[] = ccxt.exchanges;
 
-    let e = '';
-    exchanges.forEach(ex => {
-      e += ex + ', ';
-    })
-    return 'Hello World! ' + e;
+  constructor(private configService: ConfigService) {
+    configService.init();
+  }
+
+  getHello(): string {
+    return 'Hello World!';
   }
 }

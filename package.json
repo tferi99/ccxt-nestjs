@@ -22,11 +22,13 @@
     "@nestjs/common": "^6.0.0",
     "@nestjs/core": "^6.0.0",
     "@nestjs/platform-express": "^6.0.0",
+    "@nestjs/swagger": "^3.1.0",
     "ccxt": "^1.18.1038",
     "log4js": "^4.5.1",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
-    "rxjs": "^6.3.3"
+    "rxjs": "^6.3.3",
+    "swagger-ui-express": "^4.0.7"
   },
   "devDependencies": {
     "@nestjs/testing": "6.1.1",

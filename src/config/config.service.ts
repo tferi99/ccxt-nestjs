@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
-import { ExchangeConfig } from '../model/exchange-config';
 import * as fs from 'fs';
-import { Configuration } from '../model/configuration';
+import * as FileUtils from '../core/utils/file-utils';
+import { AppConfig, ConfigStatus, ExchangeConfig } from './config.model';
 
 export const CONFIG_FILE = '/tmp/config.json';
 
-export interface ConfigStatus {
-  inited: boolean;
-  error?: string;
-}
-
 @Injectable()
 export class ConfigService {
-  config: Configuration;
+  private readonly log = new Logger(ConfigService.name);
+
+  config: AppConfig;
+
   status: ConfigStatus = {
     inited: false,
   };
@@ -21,21 +19,9 @@ export class ConfigService {
   constructor() {}
 
   init(): boolean {
-    let fileContents;
-
-    // load
     try {
-      Logger.debug('Configuration loading from:' + CONFIG_FILE);
-      fileContents = fs.readFileSync(CONFIG_FILE, 'utf8');
-
-      // parse
-      try {
-        this.config = JSON.parse(fileContents);
-      } catch (err) {
-        Logger.error('Error during parsing configuration from ' + CONFIG_FILE + err);
-        this.status.inited = false;
-        this.status.error = err.toString();
-      }
+      this.log.debug('Configuration loading from:' + CONFIG_FILE);
+      this.config = FileUtils.loadJsonFile(CONFIG_FILE) as AppConfig;
 
       // inited
       this.status.inited = true;
@@ -57,5 +43,25 @@ export class ConfigService {
 
   getExchanges(): ExchangeConfig[] {
     return this.config.exchanges;
+  }
+
+  getExchangeConfig(exchangeId: string): ExchangeConfig {
+    this.checkInited();
+
+    const cfg = this.config.exchanges.find(exc => exc.id === exchangeId);
+    if (!cfg) {
+      throw new Error(`Configuration not found for ${exchangeId}`);
+    }
+    if (!cfg.active) {
+      throw new Error(`Configuration for ${exchangeId} is not active`);
+    }
+    return cfg;
+  }
+
+  // ---------------------- helpers ----------------------
+  private checkInited() {
+    if (!this.status.inited) {
+      throw new Error('Configuration not initialized');
+    }
   }
 }

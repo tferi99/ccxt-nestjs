@@ -7,7 +7,7 @@ export class CcxtController {
   constructor(private ccxtService: CcxtService) {}
 
   @Get('exchanges')
-  getExchanges(): string[] {
-    return this.ccxtService.getExchanges();
+  getSupportedExchanges(): string[] {
+    return this.ccxtService.getSupportedExchanges();
   }
 }

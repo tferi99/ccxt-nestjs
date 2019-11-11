@@ -1,6 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
-import { ConfigService, ConfigStatus } from './config.service';
-import { ExchangeConfig } from '../model/exchange-config';
+import { Controller, Get, Param } from '@nestjs/common';
+import { ConfigService} from './config.service';
+import { ConfigStatus, ExchangeConfig } from './config.model';
 
 @Controller('config')
 export class ConfigController {
@@ -20,5 +20,10 @@ export class ConfigController {
   @Get('exchanges')
   getExchanges(): ExchangeConfig[] {
     return this.configService.getExchanges();
+  }
+
+  @Get('exchange/:id')
+  getExchange(@Param('id')id: string): ExchangeConfig {
+    return this.getExchanges().find(ex => ex.id === id);
   }
 }

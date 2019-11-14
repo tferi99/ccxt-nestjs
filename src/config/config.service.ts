@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as FileUtils from '../core/utils/file-utils';
@@ -24,12 +24,12 @@ export class ConfigService {
       this.config = FileUtils.loadJsonFile(CONFIG_FILE) as AppConfig;
 
       // inited
+      this.config.exchanges.forEach((exConfig: ExchangeConfig, index: number) => exConfig.validated = false);
       this.status.inited = true;
       this.status.error = undefined;
-
-      this.config.exchanges.forEach((exConfig: ExchangeConfig, index: number) => exConfig.validated = false);
+      this.log.log('Configuration loaded from ' + CONFIG_FILE);
     } catch (err) {
-      Logger.error('Error during loading configuration from ' + CONFIG_FILE + err);
+      this.log.error('Error during loading configuration from ' + CONFIG_FILE + err);
       this.status.inited = false;
       this.status.error = err.toString();
       return false;
@@ -50,10 +50,10 @@ export class ConfigService {
 
     const cfg = this.config.exchanges.find(exc => exc.id === exchangeId);
     if (!cfg) {
-      throw new Error(`Configuration not found for ${exchangeId}`);
+      throw new NotFoundException(`Configuration not found for ${exchangeId}`);
     }
     if (!cfg.active) {
-      throw new Error(`Configuration for ${exchangeId} is not active`);
+      throw new NotAcceptableException(`Configuration for ${exchangeId} is not active`);
     }
     return cfg;
   }

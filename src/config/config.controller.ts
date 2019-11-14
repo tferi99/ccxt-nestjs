@@ -17,7 +17,7 @@ export class ConfigController {
     return this.configService.getStatus();
   }
 
-  @Get('exchanges')
+  @Get('exchangeBalances')
   getExchanges(): ExchangeConfig[] {
     return this.configService.getExchanges();
   }

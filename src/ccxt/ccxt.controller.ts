@@ -6,7 +6,7 @@ import { CcxtService } from './ccxt.service';
 export class CcxtController {
   constructor(private ccxtService: CcxtService) {}
 
-  @Get('exchangeBalances')
+  @Get('exchanges')
   getSupportedExchanges(): string[] {
     return this.ccxtService.getSupportedExchanges();
   }

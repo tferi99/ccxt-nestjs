@@ -9,15 +9,16 @@ import { ExchangeBalance } from './exchange-balance.model';
 export class BalanceController {
   constructor(private balanceService: BalanceService) {}
 
-  @Get('/total')
-  async getTotalBalance(@Query('onlyNotNull')onlyNotNullParam: string ): Promise<TotalBalance> {
+  @Get()
+  async getTotalBalance(@Query('onlyNotNull')onlyNotNullParam: string, @Query('withInactive')withInactiveParam: string): Promise<TotalBalance> {
     const onlyNotNull = queryParamToBool(onlyNotNullParam, true);
-    return this.balanceService.getTotalBalance(onlyNotNull);
+    const withInactive = queryParamToBool(withInactiveParam, false);
+    return this.balanceService.getTotalBalance(onlyNotNull, withInactive);
   }
 
   @Get('/:exchange')
-  async getExchangeBalance(@Param('exchange')exchangeId: string, @Query('onlyNotNull')onlyNotNullParam: string ): Promise<ExchangeBalance> {
+  async getExchangeBalance(@Param('exchange')exchangeId: string, @Query('onlyNotNull')onlyNotNullParam?: string): Promise<ExchangeBalance> {
     const onlyNotNull = queryParamToBool(onlyNotNullParam, true);
-    return this.balanceService.getExchangeBalance(exchangeId, onlyNotNull);
+    return this.balanceService.getExchangeBalanceById(exchangeId, onlyNotNull);
   }
 }

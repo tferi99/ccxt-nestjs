@@ -7,12 +7,17 @@ export interface ExchangeConfig {
   id: string;
   name: string;
   apiKey: string;
-  apiSecret: string;
+  secret: string;
   validated: boolean;
+  enabled: boolean;
+  verbose?: boolean;            // default specified
+  enableRateLimit?: boolean;    // default specified
+  timeout?: number;             // default specified
+
+  // calculated during connection
   active: boolean;
-  verbose?: boolean;
-  enableRateLimit?: boolean;
-  timeout?: number;
+  error: Error;
+  errorMessage: string;
 }
 
 export interface AppConfig {

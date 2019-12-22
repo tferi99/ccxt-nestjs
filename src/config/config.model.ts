@@ -8,6 +8,7 @@ export interface ExchangeConfig {
   name: string;
   apiKey: string;
   secret: string;
+  password: string;
   validated: boolean;
   enabled: boolean;
   verbose?: boolean;            // default specified

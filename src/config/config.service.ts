@@ -55,7 +55,10 @@ export class ConfigService {
   getExchangesConfig(hideSecrets: boolean = true, onlyEnabled: boolean = true): ExchangeConfig[] {
     let exchanges: ExchangeConfig[] = _.cloneDeep(this.config.exchanges);
     if (hideSecrets) {
-      exchanges.forEach(exch => exch.secret = '*****');
+      exchanges.forEach(exch => {
+        exch.secret = '*****';
+        exch.password = '*****';
+      });
     }
     if (onlyEnabled) {
       exchanges = exchanges.filter(exch => exch.enabled);

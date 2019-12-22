@@ -42,6 +42,8 @@ export class ConnectionService {
     return this.connections;
   }
 
+
+
   disconnect(exchangeId: string): void {
     this.connections.delete(exchangeId);
   }
